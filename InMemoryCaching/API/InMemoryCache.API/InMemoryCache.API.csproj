@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Application\InMemoryCaching.Services\InMemoryCaching.Services.csproj" />
+    <ProjectReference Include="..\..\Data\InMemoryCaching.Repositories\InMemoryCaching.Repositories.csproj" />
+    <ProjectReference Include="..\..\Domain\InMemoryCaching.Domain\InMemoryCaching.Domain.csproj" />
+    <ProjectReference Include="..\..\IOC\InMemoryCaching.IOC\InMemoryCaching.IOC.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>
