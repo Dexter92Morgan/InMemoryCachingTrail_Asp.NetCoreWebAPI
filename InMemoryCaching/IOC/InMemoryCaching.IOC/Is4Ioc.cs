@@ -2,11 +2,6 @@
 using InMemoryCaching.Domain.Interfaces.RepositoryInterfaces;
 using InMemoryCaching.Services.Services;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InMemoryCaching.IOC
 {

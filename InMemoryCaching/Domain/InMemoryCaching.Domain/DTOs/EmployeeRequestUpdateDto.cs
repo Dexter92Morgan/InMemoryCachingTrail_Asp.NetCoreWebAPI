@@ -2,7 +2,8 @@
 
 namespace InMemoryCaching.Domain.DTOs
 {
-    public class EmployeeRequestDto
+
+    public class EmployeeRequestUpdateDto
     {
         [Required]
         public string? FullName { get; set; }
@@ -12,6 +13,5 @@ namespace InMemoryCaching.Domain.DTOs
         public string? Position { get; set; }
         [Required]
         public string? OfficeLocation { get; set; }
-
     }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace InMemoryCaching.Domain.Helpers
+﻿namespace InMemoryCaching.Domain.Helpers
 {
     public static class Messages
     {

@@ -1,22 +1,19 @@
 ﻿using InMemoryCaching.Domain.DTOs;
+using InMemoryCaching.Domain.Exceptions;
+using InMemoryCaching.Domain.Helpers;
 using InMemoryCaching.Domain.Interfaces.BussinessInterfaces;
 using InMemoryCaching.Domain.Interfaces.RepositoryInterfaces;
 using InMemoryCaching.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InMemoryCaching.Services.Services
 {
     public class EmployeeServices : IEmployeeService
     {
-        private readonly IEmployeeRepository _employeeRepository; 
-        public EmployeeServices(IEmployeeRepository employeeRepository) 
+        private readonly IEmployeeRepository _employeeRepository;
+        public EmployeeServices(IEmployeeRepository employeeRepository)
         {
-            _employeeRepository = employeeRepository;    
-        }   
+            _employeeRepository = employeeRepository;
+        }
         public async Task<string> AddEmployee(EmployeeRequestDto employee)
         {
             var newEmployee = new Employee
@@ -31,24 +28,58 @@ namespace InMemoryCaching.Services.Services
             return retVal ? newEmployee.FullName : null;
         }
 
-        public Task<bool> DeleteEmployee(Employee employeedelete)
+        public async Task<IEnumerable<EmployeeGetDto>> GetAllEmployeeAsync()
         {
-            throw new NotImplementedException();
+            var result = await _employeeRepository.GetAllEmployeeAsync();
+
+            return result.Select(x => x)
+            .Select(x => new EmployeeGetDto
+            {
+                EmployeeId = x.EmployeeId,
+                FullName = x.FullName,
+                EmpCode = x.EmpCode,
+                Position = x.Position,
+                OfficeLocation = x.OfficeLocation
+            });
         }
 
-        public Task<IEnumerable<Employee>> GetAllEmployeeAsync()
+        public async Task<Employee> GetEmployeeByIdAsync(int employeeid)
         {
-            throw new NotImplementedException();
+            var employee = await _employeeRepository.GetEmployeeByIdAsync(employeeid);
+            if (employee == null)
+            {
+                throw new RepositoryException(Messages.InvalidEmployeeId);
+            }
+            return employee;
         }
 
-        public Task<Employee> GetEmployeeByIdAsync(string id)
+        public async Task<bool> UpdateEmployee(EmployeeRequestUpdateDto employeeRequestUpdateDto, int employeeid)
         {
-            throw new NotImplementedException();
+            var employee = await _employeeRepository.GetEmployeeByIdAsync(employeeid);
+            if (employee == null)
+            {
+                throw new RepositoryException(Messages.InvalidEmployeeId);
+            }
+            else
+            {
+                employee.FullName = employeeRequestUpdateDto.FullName;
+                employee.EmpCode = employeeRequestUpdateDto.EmpCode;
+                employee.Position = employeeRequestUpdateDto.Position;
+                employee.OfficeLocation = employeeRequestUpdateDto.OfficeLocation;
+                var retval = await _employeeRepository.UpdateEmployee(employee, employeeid);
+                return retval;
+            }
         }
 
-        public Task<bool> UpdateEmployee(Employee employeeUpdate)
+        public async Task<bool> DeleteEmployee(int employeeid)
         {
-            throw new NotImplementedException();
+            var employee = await _employeeRepository.GetEmployeeByIdAsync(employeeid);
+            if (employee == null)
+            {
+                throw new RepositoryException(Messages.InvalidEmployeeId);
+            }
+            return await _employeeRepository.DeleteEmployee(employeeid);
         }
+
     }
 }

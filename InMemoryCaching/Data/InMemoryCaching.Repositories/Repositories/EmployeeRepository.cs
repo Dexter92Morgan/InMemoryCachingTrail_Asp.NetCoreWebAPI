@@ -1,14 +1,7 @@
 ﻿using Dapper;
-using InMemoryCaching.Domain.DTOs;
 using InMemoryCaching.Domain.Interfaces.RepositoryInterfaces;
 using InMemoryCaching.Domain.Models;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InMemoryCaching.Repositories.Repositories
 {
@@ -33,24 +26,53 @@ namespace InMemoryCaching.Repositories.Repositories
             return result > 0;
         }
 
-        public Task<bool> DeleteEmployee(Employee employeedelete)
+        public async Task<IEnumerable<Employee>> GetAllEmployeeAsync()
         {
-            throw new NotImplementedException();
+            using (var connection = new SqlConnection(_dataAccess.GetConnectionString()))
+            {
+                string sql = @"SELECT * FROM Employees";
+                connection.Open();
+                var result = await connection.QueryAsync<Employee>(sql);
+                connection.Close();
+                return result;
+            }
+
         }
 
-        public Task<IEnumerable<Employee>> GetAllEmployeeAsync()
+        public async Task<Employee> GetEmployeeByIdAsync(int employeeid)
         {
-            throw new NotImplementedException();
+            using (var connection = new SqlConnection(_dataAccess.GetConnectionString()))
+            {
+                string sql = @"SELECT * FROM Employees WHERE EmployeeId=@EmployeeId";
+                connection.Open();
+                var result = await connection.QueryAsync<Employee>(sql, new { EmployeeId = employeeid });
+                connection.Close();
+                return result.FirstOrDefault();
+            }
         }
 
-        public Task<Employee> GetEmployeeByIdAsync(string id)
+        public async Task<bool> UpdateEmployee(Employee employeeUpdate, int employeeid)
         {
-            throw new NotImplementedException();
+            using (var connection = new SqlConnection(_dataAccess.GetConnectionString()))
+            {
+                string sql = @"UPDATE Employees Set FullscdName=@FullName,EmpCode=@EmpCode,Position=@Position,OfficeLocation=@OfficeLocation WHERE EmployeeId=@EmployeeId";
+                connection.Open();
+                await connection.QueryAsync(sql, employeeUpdate);
+                connection.Close();
+                return true;
+            }
         }
 
-        public Task<bool> UpdateEmployee(Employee employeeUpdate)
+        public async Task<bool> DeleteEmployee(int employeeid)
         {
-            throw new NotImplementedException();
+            using (var connection = new SqlConnection(_dataAccess.GetConnectionString()))
+            {
+                string sql = @"DELETE FROM Employees WHERE EmployeeId=@EmployeeId";
+                connection.Open();
+                await connection.QueryAsync(sql, new { EmployeeId = employeeid });
+                connection.Close();
+                return true;
+            }
         }
     }
 }

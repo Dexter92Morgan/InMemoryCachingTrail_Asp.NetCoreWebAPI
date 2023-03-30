@@ -1,3 +1,4 @@
+using InMemoryCache.API.Middleware;
 using InMemoryCaching.Domain.Interfaces.RepositoryInterfaces;
 using InMemoryCaching.IOC;
 using InMemoryCaching.Repositories.Common;
@@ -14,6 +15,7 @@ builder.Services.AddSingleton<IDataAccess, DataAccess>();
 DependencyContainer.RegisterService(builder.Services);
 var app = builder.Build();
 
+app.UseMiddleware(typeof(ExceptionHandlingMiddleware));
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
