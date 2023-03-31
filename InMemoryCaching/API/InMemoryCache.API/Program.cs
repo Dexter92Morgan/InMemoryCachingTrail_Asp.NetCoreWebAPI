@@ -12,6 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IDataAccess, DataAccess>();
+builder.Services.AddMemoryCache();
 DependencyContainer.RegisterService(builder.Services);
 var app = builder.Build();
 
@@ -30,3 +31,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+
+//reference
+//https://www.c-sharpcorner.com/article/how-to-implement-caching-in-the-net-core-web-api-application/

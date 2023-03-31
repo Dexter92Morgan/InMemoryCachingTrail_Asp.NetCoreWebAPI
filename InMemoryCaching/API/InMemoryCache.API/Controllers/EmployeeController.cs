@@ -1,4 +1,5 @@
-﻿using InMemoryCaching.Domain.DTOs;
+﻿using InMemoryCache.Services.Cache.CacheInterface;
+using InMemoryCaching.Domain.DTOs;
 using InMemoryCaching.Domain.Helpers;
 using InMemoryCaching.Domain.Interfaces.BussinessInterfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -12,11 +13,12 @@ namespace InMemoryCache.API.Controllers
     {
         private readonly IEmployeeService _employeeService;
         private readonly ILogger _logger;
-
-        public EmployeeController(IEmployeeService employeeService, ILogger<EmployeeController> logger)
+        private readonly ICacheProvider _cacheProvider;
+        public EmployeeController(IEmployeeService employeeService, ILogger<EmployeeController> logger,ICacheProvider cacheProvider)
         {
             _employeeService = employeeService;
             _logger = logger;
+            _cacheProvider = cacheProvider;
         }
 
         /// <summary>
@@ -66,6 +68,27 @@ namespace InMemoryCache.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Get all Employees from Cache
+        /// </summary>
+        /// <returns></returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [HttpGet]
+        [Route("employeecache")]
+        public async Task<IActionResult> GetAllEmployeesCacheResponse()
+        {
+            _logger.LogInformation("Get All Employees");
+            var employees = await _cacheProvider.GetCachedResponse();
+            if (employees != null)
+            {
+                return Ok(employees);
+            }
+            else
+            {
+                return BadRequest(new { message = Messages.NoData, currentDate = DateTime.Now });
+            }
+        }
         /// <summary>
         /// Get Employees by Id
         /// </summary>
