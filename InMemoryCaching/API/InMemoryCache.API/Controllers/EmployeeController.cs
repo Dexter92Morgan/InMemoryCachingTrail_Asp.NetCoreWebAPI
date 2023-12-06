@@ -41,7 +41,7 @@ namespace InMemoryCache.API.Controllers
             }
             else
             {
-                _logger.LogInformation("{error} : Employee :{employee}", Messages.EmployeeRegisterSuccess, employeeRequestDto.FullName);
+                _logger.LogInformation("{error} : Employee :{employee}", Messages.EmployeeRegisterError, employeeRequestDto.FullName);
                 return BadRequest(new { message = Messages.EmployeeRegisterError, currentDate = DateTime.Now });
             }
         }

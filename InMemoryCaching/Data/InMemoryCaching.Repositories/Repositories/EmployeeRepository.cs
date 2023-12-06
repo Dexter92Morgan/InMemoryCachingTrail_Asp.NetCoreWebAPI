@@ -55,7 +55,7 @@ namespace InMemoryCaching.Repositories.Repositories
         {
             using (var connection = new SqlConnection(_dataAccess.GetConnectionString()))
             {
-                string sql = @"UPDATE Employees Set FullscdName=@FullName,EmpCode=@EmpCode,Position=@Position,OfficeLocation=@OfficeLocation WHERE EmployeeId=@EmployeeId";
+                string sql = @"UPDATE Employees Set FullName=@FullName,EmpCode=@EmpCode,Position=@Position,OfficeLocation=@OfficeLocation WHERE EmployeeId=@EmployeeId";
                 connection.Open();
                 await connection.QueryAsync(sql, employeeUpdate);
                 connection.Close();
